@@ -124,7 +124,8 @@ public final class PolymerItemUtils {
             HideableTooltip.of(DataComponentTypes.UNBREAKABLE, UnbreakableComponent::withShowInTooltip),
             HideableTooltip.of(DataComponentTypes.CAN_BREAK, BlockPredicatesChecker::withShowInTooltip),
             HideableTooltip.of(DataComponentTypes.CAN_PLACE_ON, BlockPredicatesChecker::withShowInTooltip),
-            HideableTooltip.of(DataComponentTypes.JUKEBOX_PLAYABLE, JukeboxPlayableComponent::withShowInTooltip)
+            HideableTooltip.of(DataComponentTypes.JUKEBOX_PLAYABLE, JukeboxPlayableComponent::withShowInTooltip),
+            HideableTooltip.of(DataComponentTypes.DYED_COLOR, DyedColorComponent::withShowInTooltip)
     );
 
     private PolymerItemUtils() {
@@ -379,6 +380,11 @@ public final class PolymerItemUtils {
                 out.set((ComponentType) key, (Object) itemStack.get(key));
             }
         }
+
+        if (itemStack.getItem() instanceof PolymerItem polymerItem) {
+            polymerItem.modifyBasePolymerItemStack(out, itemStack, context);
+        }
+
         var lookup = context.getRegistryWrapperLookup();
 
         {

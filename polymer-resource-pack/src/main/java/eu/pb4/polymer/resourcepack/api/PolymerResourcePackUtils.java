@@ -9,9 +9,11 @@ import eu.pb4.polymer.resourcepack.impl.generation.DefaultRPBuilder;
 import eu.pb4.polymer.resourcepack.api.metadata.PackMcMeta;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Item;
+import net.minecraft.server.network.ServerCommonNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -79,12 +81,20 @@ public final class PolymerResourcePackUtils {
         return INSTANCE.addBridgedModelsFolder(modelFolderId);
     }
 
+    public static boolean addBridgedModelsFolder(Identifier... modelFolderId) {
+        return INSTANCE.addBridgedModelsFolder(modelFolderId);
+    }
+
     public static Identifier getBridgedModelId(Identifier model) {
         if (model.getPath().startsWith("item/")) {
             return model.withPath(model.getPath().substring("item/".length()));
         }
 
         return model.withPrefixedPath("-/");
+    }
+
+    public static Identifier bridgeModel(Identifier model) {
+        return getBridgedModelId(model);
     }
 
     /**
@@ -102,11 +112,56 @@ public final class PolymerResourcePackUtils {
      * Allows to check if player has selected server side resoucepack installed
      * However it's impossible to check if it's polymer one or not
      *
+     * @param context Player to check
+     * @return True if player has a server resourcepack
+     */
+    public static boolean hasPack(PacketContext context, UUID uuid) {
+        return PolymerCommonUtils.hasResourcePack(context, uuid);
+    }
+
+
+    /**
+     * Allows to check if player has selected server side resoucepack installed
+     * However it's impossible to check if it's polymer one or not
+     *
+     * @param handler Player to check
+     * @return True if player has a server resourcepack
+     */
+    public static boolean hasPack(ServerCommonNetworkHandler handler, UUID uuid) {
+        return PolymerCommonUtils.hasResourcePack(handler, uuid);
+    }
+
+
+    /**
+     * Allows to check if player has selected server side resoucepack installed
+     * However it's impossible to check if it's polymer one or not
+     *
      * @param player Player to check
      * @return True if player has a server resourcepack
      */
     public static boolean hasMainPack(@Nullable ServerPlayerEntity player) {
         return hasPack(player, getMainUuid());
+    }
+
+    /**
+     * Allows to check if player has selected server side resoucepack installed
+     * However it's impossible to check if it's polymer one or not
+     *
+     * @param context Player to check
+     * @return True if player has a server resourcepack
+     */
+    public static boolean hasMainPack(PacketContext context) {
+        return hasPack(context, getMainUuid());
+    }
+    /**
+     * Allows to check if player has selected server side resoucepack installed
+     * However it's impossible to check if it's polymer one or not
+     *
+     * @param handler Player to check
+     * @return True if player has a server resourcepack
+     */
+    public static boolean hasMainPack(ServerCommonNetworkHandler handler) {
+        return hasPack(handler, getMainUuid());
     }
 
     public static Path getMainPath() {

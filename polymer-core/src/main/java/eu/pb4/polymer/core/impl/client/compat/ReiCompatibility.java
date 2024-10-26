@@ -35,14 +35,6 @@ public class ReiCompatibility implements REIClientPlugin {
             e.printStackTrace();
         }
     }
-    @Override
-    public void registerItemComparators(ItemComparatorRegistry registry) {
-        try {
-            //registry.registerGlobal(ITEM_STACK_ENTRY_COMPARATOR);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void registerEntries(EntryRegistry registry) {

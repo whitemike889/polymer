@@ -100,7 +100,15 @@ public final class ResourcePackCreator {
         if (modelFolderId.getPath().equals("item") || modelFolderId.getPath().startsWith("item/")) {
             return false;
         }
-        return this.bridgedModels.add(modelFolderId);
+        return this.bridgedModels.add(modelFolderId.getPath().endsWith("/") ? modelFolderId.withPath(x -> x.substring(0, x.length() - 1)) : modelFolderId);
+    }
+
+    public boolean addBridgedModelsFolder(Identifier... modelFolderId) {
+        var b = true;
+        for (var model : modelFolderId) {
+            b &= addBridgedModelsFolder(model);
+        }
+        return b;
     }
 
     /**

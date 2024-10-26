@@ -37,11 +37,6 @@ public interface PolymerItem extends PolymerSyncedObject<Item> {
      */
     Item getPolymerItem(ItemStack itemStack, PacketContext context);
 
-    @Nullable
-    default Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
-        return stack.get(DataComponentTypes.ITEM_MODEL);
-    }
-
     /**
      * Method used for creation of client-side ItemStack
      *
@@ -54,7 +49,33 @@ public interface PolymerItem extends PolymerSyncedObject<Item> {
     }
 
     /**
-     * This method allows to modify tooltip text
+     * Method used for selecting model to use. Invoked within PolymerItemUtils#createItemStack / default stack creation
+     * before polymer-specific modifications
+     *
+     * @param stack Server-side ItemStack, used as reference
+     * @param context    Player for which it's send
+     * @return Identifier targetting item model or null to fallback to base item one
+     */
+    @Nullable
+    default Identifier getPolymerItemModel(ItemStack stack, PacketContext context) {
+        return stack.get(DataComponentTypes.ITEM_MODEL);
+    }
+
+    /**
+     * Method used for creation of client-side ItemStack.
+     * Invoked within PolymerItemUtils#createItemStack / default stack creation before polymer-specific modifications.
+     * For modifying after polymer, you should override {@link PolymerItem#getPolymerItemStack(ItemStack, TooltipType, PacketContext)}.
+     *
+     * @param out Client-side ItemStack, sent to the player (and one that should be modified)
+     * @param stack Server-side ItemStack, used as reference
+     * @param context    Player for which it's send
+     */
+    default void modifyBasePolymerItemStack(ItemStack out, ItemStack stack, PacketContext context) {
+    }
+
+
+    /**
+     * This method allows to modify tooltip text. Invoked within PolymerItemUtils#createItemStack / default stack creation
      * If you just want to add your own one, use {@link Item#appendTooltip(ItemStack, Item.TooltipContext, List, TooltipType)}
      *
      * @param tooltip Current tooltip text

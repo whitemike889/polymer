@@ -33,7 +33,7 @@ public final class PolymerCommonUtils {
 
     public static final SimpleEvent<ResourcePackChangeCallback> ON_RESOURCE_PACK_STATUS_CHANGE = new SimpleEvent<>();
     private static Path cachedClientPath;
-    private final static String SAFE_CLIENT_SHA1 = "0e9a07b9bb3390602f977073aa12884a4ce12431";
+    private final static String SAFE_CLIENT_SHA1 = "6f67d19b4467240639cb2c368ffd4b94ba889705";
     private final static String SAFE_CLIENT_URL = "https://piston-data.mojang.com/v1/objects/" + SAFE_CLIENT_SHA1 + "/client.jar";
     private static Path cachedClientJarRoot;
 
@@ -209,10 +209,21 @@ public final class PolymerCommonUtils {
                 || (CommonImpl.IS_CLIENT && ClientUtils.isResourcePackLoaded());
     }
 
+    public static boolean hasResourcePack(ServerCommonNetworkHandler handler, UUID uuid) {
+        return CommonImpl.FORCE_RESOURCEPACK_ENABLED_STATE
+                || (((CommonClientConnectionExt) ((CommonNetworkHandlerExt) handler).polymerCommon$getConnection()).polymerCommon$hasResourcePack(uuid))
+                || (CommonImpl.IS_CLIENT && ClientUtils.isResourcePackLoaded());
+    }
+
     public static boolean hasResourcePack(ClientConnection connection, UUID uuid) {
         return CommonImpl.FORCE_RESOURCEPACK_ENABLED_STATE
                 || ((CommonClientConnectionExt) connection).polymerCommon$hasResourcePack(uuid)
                 || (CommonImpl.IS_CLIENT && ClientUtils.isResourcePackLoaded());
+    }
+
+    public static boolean hasResourcePack(PacketContext context, UUID uuid) {
+        return CommonImpl.FORCE_RESOURCEPACK_ENABLED_STATE
+                || context.getClientConnection() != null && hasResourcePack(context.getClientConnection(), uuid);
     }
 
     public static boolean isServerBound() {
