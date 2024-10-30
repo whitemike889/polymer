@@ -101,7 +101,7 @@ public class ManaCauldron extends Block implements PolymerBlock, BlockWithElemen
             var world = attachment.getWorld();
             if (manaLevel > 0) {
                 if (age % (4 - manaLevel) == 0) {
-                    world.spawnParticles(ParticleTypes.UNDERWATER, blockPos.getX() + 0.5, blockPos.getY() + 0.75 + offset, blockPos.getZ() + 0.5, 10, 0.15, 0.15, 0.15, 1);
+                    world.spawnParticles(ParticleTypes.UNDERWATER, false, true, blockPos.getX() + 0.5, blockPos.getY() + 0.75 + offset, blockPos.getZ() + 0.5, 10, 0.15, 0.15, 0.15, 1);
                 }
                 if (manaBubbles.size() < manaLevel * 10) {
                     Vec3d velocity = new Vec3d((random.nextFloat() - 0.5) * 0.2, 0.05f * manaLevel, (random.nextFloat() - 0.5) * 0.2);
@@ -121,6 +121,7 @@ public class ManaCauldron extends Block implements PolymerBlock, BlockWithElemen
                     }
                     world.spawnParticles(
                             ParticleTypes.BUBBLE_POP,
+                            false, false,
                             pos.x,
                             pos.y,
                             pos.z,

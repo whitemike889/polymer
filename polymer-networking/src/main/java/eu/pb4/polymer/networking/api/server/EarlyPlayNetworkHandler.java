@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import eu.pb4.polymer.common.impl.CommonImpl;
 import eu.pb4.polymer.networking.impl.EarlyPlayConnectionMagic;
 import eu.pb4.polymer.networking.impl.TempPlayerLoginAttachments;
+import net.minecraft.class_10370;
+import net.minecraft.class_10371;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.network.RegistryByteBuf;
@@ -401,7 +403,12 @@ public class EarlyPlayNetworkHandler implements ServerPlayPacketListener, Tickab
     }
 
     @Override
-    public void onPickFromInventory(PickFromInventoryC2SPacket packet) {
+    public void method_65085(class_10370 arg) {
+
+    }
+
+    @Override
+    public void onPickFromInventory(class_10371 packet) {
 
     }
 

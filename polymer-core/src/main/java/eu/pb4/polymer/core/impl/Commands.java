@@ -103,14 +103,6 @@ public class Commands {
                         .requires(CommonImplUtils.permission("command.target-item", 3))
                         .executes(Commands::targetItem)
                 )
-                .then(literal("pick")
-                        .requires(CommonImplUtils.permission("command.pick", 0))
-                        .executes((ctx) -> Commands.pickTarget(ctx, false))
-                        .then(
-                                literal("withnbt").executes((ctx) -> Commands.pickTarget(ctx, true))
-                        )
-
-                )
                 .then(literal("creative")
                         .requires(CommonImplUtils.permission("command.creative", 0))
                         .then(argument("itemGroup", IdentifierArgumentType.identifier())
@@ -125,31 +117,6 @@ public class Commands {
                                 .executes(Commands::creativeTab)
                         )
                         .executes(Commands::creativeTab));
-    }
-
-    private static int pickTarget(CommandContext<ServerCommandSource> serverCommandSourceCommandContext, boolean withNbt) throws CommandSyntaxException {
-        var player = serverCommandSourceCommandContext.getSource().getPlayerOrThrow();
-        var range = player.getEntityInteractionRange();
-
-        var min = player.getCameraPosVec(0);
-        var rot = player.getRotationVec(0);
-        var max = min.add(rot.x * range, rot.y * range, rot.z * range);
-
-        var box = player.getBoundingBox().stretch(rot.multiply(range)).expand(1.0, 1.0, 1.0);
-        var entityHit = ProjectileUtil.raycast(player, min, max, box, entity -> !player.isSpectator() && entity.canHit(), range);
-
-        if (entityHit != null) {
-            PolymerImplUtils.pickEntity(player, entityHit.getEntity());
-            return 1;
-        }
-
-        var hit = player.raycast(player.getBlockInteractionRange(), 0, false);
-        if (hit instanceof BlockHitResult result && hit.getType() != HitResult.Type.MISS) {
-            PolymerImplUtils.pickBlock(player, result.getBlockPos(), withNbt);
-            return 2;
-        }
-
-        return 0;
     }
 
     public static void registerDev(LiteralArgumentBuilder<ServerCommandSource> dev) {

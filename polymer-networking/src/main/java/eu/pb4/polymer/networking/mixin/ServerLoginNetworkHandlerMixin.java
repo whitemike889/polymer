@@ -102,7 +102,7 @@ public abstract class ServerLoginNetworkHandlerMixin implements NetworkHandlerEx
                     for (var packetx : context.storedPackets()) {
                         try {
                             //noinspection unchecked
-                            ((Packet<ServerConfigurationPacketListener>) packetx).apply(listener);
+                            ((Packet<ServerConfigurationPacketListener>) packetx).method_65081(listener);
                         } catch (Throwable e) {
                             e.printStackTrace();
                         }

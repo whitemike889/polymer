@@ -27,10 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MinecraftClientMixin {
     @Shadow
     @Nullable
-    public HitResult crosshairTarget;
-
-    @Shadow
-    @Nullable
     public abstract ClientPlayNetworkHandler getNetworkHandler();
 
     @Inject(method = "tick", at = @At("TAIL"))
@@ -43,29 +39,5 @@ public abstract class MinecraftClientMixin {
     @Inject(method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;setWorld(Lnet/minecraft/client/world/ClientWorld;)V"))
     private void polymer$onDisconnect(CallbackInfo ci) {
         InternalClientRegistry.disable();
-    }
-
-    @Inject(method = "doItemPick", at = @At("HEAD"), cancellable = true)
-    private void polymer$pickBlock(CallbackInfo ci) {
-        if (PolymerImpl.CHANGING_QOL_CLIENT && InternalClientRegistry.enabled && this.getNetworkHandler() != null && this.crosshairTarget != null) {
-            switch (this.crosshairTarget.getType()) {
-                case BLOCK -> {
-                    var pos = ((BlockHitResult) this.crosshairTarget).getBlockPos();
-
-                    if (InternalClientRegistry.getBlockAt(pos) != ClientPolymerBlock.NONE_STATE) {
-                        PolymerClientProtocol.sendPickBlock(this.getNetworkHandler(), pos);
-                        ci.cancel();
-                    }
-                }
-                case ENTITY -> {
-                    var entity = ((EntityHitResult) this.crosshairTarget).getEntity();
-
-                    if (PolymerClientUtils.getEntityType(entity) != null) {
-                        PolymerClientProtocol.sendPickEntity(this.getNetworkHandler(), entity.getId());
-                        ci.cancel();
-                    }
-                }
-            }
-        }
     }
 }

@@ -10,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.dragon.EnderDragonPart;
 import net.minecraft.entity.damage.DamageScaling;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageSources;
@@ -330,6 +331,11 @@ public final class FakeWorld extends World implements LightSourceView {
     @Override
     public Entity getEntityById(int id) {
         return null;
+    }
+
+    @Override
+    public Collection<EnderDragonPart> method_65097() {
+        return List.of();
     }
 
     @Override

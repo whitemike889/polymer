@@ -20,12 +20,12 @@ public interface ServerDynamicPacket extends Packet<ClientCommonPacketListener> 
     Packet<ClientCommonPacketListener> createPacket(ServerCommonNetworkHandler handler, @Nullable ServerPlayerEntity player);
 
     @Override
-    default PacketType<? extends Packet<ClientCommonPacketListener>> getPacketId() {
+    default PacketType<? extends Packet<ClientCommonPacketListener>> method_65080() {
         throw new UnsupportedOperationException();
     };
 
     @Override
-    default void apply(ClientCommonPacketListener listener) {
+    default void method_65081(ClientCommonPacketListener listener) {
         throw new UnsupportedOperationException();
     }
 

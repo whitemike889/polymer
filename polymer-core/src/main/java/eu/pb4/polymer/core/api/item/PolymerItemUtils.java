@@ -446,7 +446,7 @@ public final class PolymerItemUtils {
         }
 
         try {
-            var tooltip = itemStack.getTooltip(context.getPlayer() != null ? Item.TooltipContext.create(context.getPlayer().getWorld()) : Item.TooltipContext.DEFAULT, context.getPlayer(), tooltipContext);
+            var tooltip = itemStack.getTooltip(context.getPlayer() != null ? Item.TooltipContext.create(context.getPlayer().getRegistryManager()) : Item.TooltipContext.DEFAULT, context.getPlayer(), tooltipContext);
             if (!tooltip.isEmpty()) {
                 tooltip.removeFirst();
 

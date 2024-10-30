@@ -1,7 +1,5 @@
 package eu.pb4.polymer.core.impl.networking;
 
-import eu.pb4.polymer.core.impl.networking.payloads.c2s.PolymerPickBlockC2SPayload;
-import eu.pb4.polymer.core.impl.networking.payloads.c2s.PolymerPickEntityC2SPayload;
 import eu.pb4.polymer.core.impl.networking.payloads.c2s.PolymerChangeTooltipC2SPayload;
 import eu.pb4.polymer.networking.api.ContextByteBuf;
 import eu.pb4.polymer.networking.api.PolymerNetworking;
@@ -22,8 +20,6 @@ public class C2SPackets {
     }
 
     static {
-        register(WORLD_PICK_BLOCK, PolymerPickBlockC2SPayload.CODEC, 6);
-        register(WORLD_PICK_ENTITY, PolymerPickEntityC2SPayload.CODEC, 6);
         register(CHANGE_TOOLTIP, PolymerChangeTooltipC2SPayload.CODEC, 6);
     }
 }
