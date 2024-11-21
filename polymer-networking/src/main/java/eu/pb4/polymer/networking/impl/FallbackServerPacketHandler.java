@@ -1,7 +1,5 @@
 package eu.pb4.polymer.networking.impl;
 
-import net.minecraft.class_10370;
-import net.minecraft.class_10371;
 import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.network.NetworkPhase;
 import net.minecraft.network.listener.ServerConfigurationPacketListener;
@@ -200,6 +198,11 @@ public record FallbackServerPacketHandler(NetworkPhase phase,
     }
 
     @Override
+    public void onPlayerLoaded(PlayerLoadedC2SPacket packet) {
+
+    }
+
+    @Override
     public void onRecipeBookData(RecipeBookDataC2SPacket packet) {
 
     }
@@ -235,12 +238,12 @@ public record FallbackServerPacketHandler(NetworkPhase phase,
     }
 
     @Override
-    public void method_65085(class_10370 arg) {
+    public void onPickItemFromBlock(PickItemFromBlockC2SPacket packet) {
 
     }
 
     @Override
-    public void onPickFromInventory(class_10371 packet) {
+    public void onPickItemFromEntity(PickItemFromEntityC2SPacket packet) {
 
     }
 

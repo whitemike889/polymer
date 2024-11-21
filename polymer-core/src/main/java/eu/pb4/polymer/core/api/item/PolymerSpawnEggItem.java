@@ -23,7 +23,7 @@ public class PolymerSpawnEggItem extends SpawnEggItem implements PolymerItem {
         this(type, polymerItem, false, settings);
     }
     public PolymerSpawnEggItem(EntityType<? extends MobEntity> type, Item polymerItem, boolean useModel, Settings settings) {
-        super(type, 0, 0, settings);
+        super(type, settings);
         this.polymerItem = polymerItem;
         this.polymerUseModel = useModel;
     }

@@ -53,7 +53,7 @@ public class JadeCompatibility implements IWailaPlugin {
 
                     var itemStack = block.block().displayStack();
                     if (itemStack.isEmpty()) {
-                        itemStack = state.method_65171(accessor.getLevel(), accessor.getPosition());
+                        itemStack = state.getPickStack(accessor.getLevel(), accessor.getPosition(), false);
                         if (!itemStack.isEmpty() && state.hasBlockEntity()) {
                             var blockEntity = accessor.getLevel().getBlockEntity(accessor.getPosition());
 

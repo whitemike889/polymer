@@ -4,8 +4,6 @@ import com.mojang.authlib.GameProfile;
 import eu.pb4.polymer.common.impl.CommonImpl;
 import eu.pb4.polymer.networking.impl.EarlyPlayConnectionMagic;
 import eu.pb4.polymer.networking.impl.TempPlayerLoginAttachments;
-import net.minecraft.class_10370;
-import net.minecraft.class_10371;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.DisconnectionInfo;
 import net.minecraft.network.RegistryByteBuf;
@@ -368,6 +366,11 @@ public class EarlyPlayNetworkHandler implements ServerPlayPacketListener, Tickab
     }
 
     @Override
+    public void onPlayerLoaded(PlayerLoadedC2SPacket packet) {
+
+    }
+
+    @Override
     public void onRecipeBookData(RecipeBookDataC2SPacket packet) {
 
     }
@@ -403,12 +406,12 @@ public class EarlyPlayNetworkHandler implements ServerPlayPacketListener, Tickab
     }
 
     @Override
-    public void method_65085(class_10370 arg) {
+    public void onPickItemFromBlock(PickItemFromBlockC2SPacket packet) {
 
     }
 
     @Override
-    public void onPickFromInventory(class_10371 packet) {
+    public void onPickItemFromEntity(PickItemFromEntityC2SPacket packet) {
 
     }
 

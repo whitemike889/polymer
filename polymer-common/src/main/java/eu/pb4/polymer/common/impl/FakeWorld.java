@@ -334,9 +334,10 @@ public final class FakeWorld extends World implements LightSourceView {
     }
 
     @Override
-    public Collection<EnderDragonPart> method_65097() {
+    public Collection<EnderDragonPart> getEnderDragonParts() {
         return List.of();
     }
+
 
     @Override
     public TickManager getTickManager() {

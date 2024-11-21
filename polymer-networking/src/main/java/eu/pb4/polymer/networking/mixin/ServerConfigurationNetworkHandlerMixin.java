@@ -53,7 +53,7 @@ public abstract class ServerConfigurationNetworkHandlerMixin extends ServerCommo
                         for (var packetx : context.storedPackets()) {
                             try {
                                 //noinspection unchecked
-                                ((Packet<ServerPlayPacketListener>) packetx).method_65081(listener);
+                                ((Packet<ServerPlayPacketListener>) packetx).apply(listener);
                             } catch (Throwable e) {
                                 e.printStackTrace();
                             }

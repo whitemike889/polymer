@@ -70,7 +70,7 @@ public class WthitCompatibility implements IWailaPlugin {
 
                 var itemStack = block.block().displayStack();
                 if (itemStack.isEmpty()) {
-                    itemStack = state.method_65171(accessor.getWorld(), accessor.getPosition());
+                    itemStack = state.getPickStack(accessor.getWorld(), accessor.getPosition(), false);
                     if (!itemStack.isEmpty() && state.hasBlockEntity()) {
                         var blockEntity = accessor.getWorld().getBlockEntity(accessor.getPosition());
 

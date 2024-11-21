@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
+@FunctionalInterface
 public interface ServerDynamicPacket extends Packet<ClientCommonPacketListener> {
     static Packet<ClientCommonPacketListener> of(BiFunction<ServerCommonNetworkHandler, @Nullable ServerPlayerEntity, Packet<ClientCommonPacketListener>> builder) {
         return (ServerDynamicPacket) builder::apply;
@@ -19,15 +20,17 @@ public interface ServerDynamicPacket extends Packet<ClientCommonPacketListener> 
 
     Packet<ClientCommonPacketListener> createPacket(ServerCommonNetworkHandler handler, @Nullable ServerPlayerEntity player);
 
-    @Override
-    default PacketType<? extends Packet<ClientCommonPacketListener>> method_65080() {
-        throw new UnsupportedOperationException();
-    };
 
     @Override
-    default void method_65081(ClientCommonPacketListener listener) {
-        throw new UnsupportedOperationException();
+    default void apply(ClientCommonPacketListener listener) {
+        throw new UnsupportedOperationException("This is not real packet!");
     }
+
+    @Override
+    default PacketType<ServerDynamicPacket> getPacketType() {
+        throw new UnsupportedOperationException("This is not real packet!");
+    }
+
 
     @Override
     default boolean isWritingErrorSkippable() {

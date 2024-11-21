@@ -114,7 +114,7 @@ public class AnimatedBlock extends FallingBlock implements PolymerBlock, BlockWi
                 pitch = dir == Direction.DOWN ? 180 : 0;
             } else {
                 pitch = 90;
-                yaw = dir.asRotation();
+                yaw = dir.getPositiveHorizontalDegrees();
             }
 
             this.planetElement.setRotation(pitch, yaw);

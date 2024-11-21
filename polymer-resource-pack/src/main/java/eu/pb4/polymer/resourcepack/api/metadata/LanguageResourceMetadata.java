@@ -9,5 +9,5 @@ public record LanguageResourceMetadata(Map<String, LanguageDefinition> definitio
     public static final Codec<String> LANGUAGE_CODE_CODEC = Codec.string(1, 16);
     public static final Codec<LanguageResourceMetadata> CODEC = Codec.unboundedMap(LANGUAGE_CODE_CODEC, LanguageDefinition.CODEC)
             .xmap(LanguageResourceMetadata::new, LanguageResourceMetadata::definitions);
-    public static final ResourceMetadataSerializer<LanguageResourceMetadata> SERIALIZER = ResourceMetadataSerializer.fromCodec("language", CODEC);
+    public static final ResourceMetadataSerializer<LanguageResourceMetadata> SERIALIZER = new ResourceMetadataSerializer<>("language", CODEC);
 }
