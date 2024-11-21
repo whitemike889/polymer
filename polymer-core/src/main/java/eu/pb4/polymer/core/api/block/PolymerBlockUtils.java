@@ -127,7 +127,7 @@ public final class PolymerBlockUtils {
 
         int req = 0;
         while (out.getBlock() instanceof PolymerBlock newBlock && newBlock != block && req < maxDistance) {
-            out = newBlock.getPolymerBlockState(blockState, context);
+            out = newBlock.getPolymerBlockState(out, context);
             req++;
         }
         return out;

@@ -1,9 +1,8 @@
 package eu.pb4.polymer.core.mixin.compat;
 
 import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
-import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import eu.pb4.polymer.core.impl.client.InternalClientRegistry;
-import me.jellysquid.mods.lithium.common.world.chunk.LithiumHashPalette;
+import net.caffeinemc.mods.lithium.common.world.chunk.LithiumHashPalette;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;

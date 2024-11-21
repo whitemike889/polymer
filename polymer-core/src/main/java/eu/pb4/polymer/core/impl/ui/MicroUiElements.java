@@ -24,16 +24,16 @@ public class MicroUiElements {
         EMPTY.set(DataComponentTypes.HIDE_TOOLTIP, Unit.INSTANCE);
 
         BUTTON_PREVIOUS = Items.GREEN_STAINED_GLASS_PANE.getDefaultStack();
-        BUTTON_PREVIOUS.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("createWorld.customize.custom.prev").setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.GREEN)));
+        BUTTON_PREVIOUS.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("spectatorMenu.previous_page").setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.GREEN)));
 
         BUTTON_PREVIOUS_LOCK = Items.WHITE_STAINED_GLASS_PANE.getDefaultStack();
-        BUTTON_PREVIOUS_LOCK.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("createWorld.customize.custom.prev").setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.DARK_GRAY)));
+        BUTTON_PREVIOUS_LOCK.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("spectatorMenu.previous_page").setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.DARK_GRAY)));
 
         BUTTON_NEXT = Items.GREEN_STAINED_GLASS_PANE.getDefaultStack();
-        BUTTON_NEXT.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("createWorld.customize.custom.next").setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.GREEN)));
+        BUTTON_NEXT.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("spectatorMenu.next_page").setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.GREEN)));
 
         BUTTON_NEXT_LOCK = Items.WHITE_STAINED_GLASS_PANE.getDefaultStack();
-        BUTTON_NEXT_LOCK.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("createWorld.customize.custom.next").setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.DARK_GRAY)));
+        BUTTON_NEXT_LOCK.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("spectatorMenu.next_page").setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.DARK_GRAY)));
 
         BUTTON_BACK = Items.BARRIER.getDefaultStack();
         BUTTON_BACK.set(DataComponentTypes.CUSTOM_NAME, Text.translatable("gui.back").setStyle(Style.EMPTY.withItalic(false).withColor(Formatting.RED)));
