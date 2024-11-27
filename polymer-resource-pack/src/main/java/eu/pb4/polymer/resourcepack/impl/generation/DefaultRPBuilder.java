@@ -4,15 +4,12 @@ import com.google.gson.*;
 import eu.pb4.polymer.common.api.PolymerCommonUtils;
 import eu.pb4.polymer.common.api.events.SimpleEvent;
 import eu.pb4.polymer.common.impl.CommonImpl;
-import eu.pb4.polymer.common.impl.CommonImplUtils;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import eu.pb4.polymer.resourcepack.api.metadata.PackMcMeta;
 import eu.pb4.polymer.resourcepack.mixin.accessors.ResourceFilterAccessor;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +41,6 @@ public class DefaultRPBuilder implements InternalRPBuilder {
     });
 
     public final SimpleEvent<Consumer<List<String>>> buildEvent = new SimpleEvent<>();
-    private final Map<Identifier, JsonArray[]> customModels = new HashMap<>();
     private final TreeMap<String, byte[]> fileMap = new TreeMap<>();
     private final Path outputPath;
     private final List<ModContainer> modsList = new ArrayList<>();
@@ -254,21 +250,6 @@ public class DefaultRPBuilder implements InternalRPBuilder {
         return false;
     }
 
-    public JsonArray getCustomModels(Identifier model, OverridePlace place) {
-        if (!this.customModels.containsKey(model)) {
-            var places = new JsonArray[OverridePlace.values().length];
-            this.customModels.put(model, places);
-        }
-
-        var json = this.customModels.get(model)[place.ordinal()];
-
-        if (json == null) {
-            json = new JsonArray();
-            this.customModels.get(model)[place.ordinal()] = json;
-        }
-        return json;
-    }
-
     @Override
     public byte[] getData(String path) {
         return this.fileMap.get(path);
@@ -391,50 +372,6 @@ public class DefaultRPBuilder implements InternalRPBuilder {
                 this.buildEvent.invoke((c) -> c.accept(credits));
 
                 boolean bool = true;
-                for (var id : this.customModels.keySet()) {
-                    try {
-                        JsonObject modelObject;
-
-                        String baseModelPath;
-                        {
-                            baseModelPath = "assets/" + id.getNamespace() + "/models/" + id.getPath() + ".json";
-                        }
-
-                        modelObject = JsonParser.parseString(new String(this.getDataOrSource(baseModelPath), StandardCharsets.UTF_8)).getAsJsonObject();
-
-
-                        if (modelObject.has("overrides")) {
-                            var x = modelObject.getAsJsonArray("overrides");
-                            var existing = this.getCustomModels(id, OverridePlace.EXISTING);
-                            var withCmd = this.getCustomModels(id, OverridePlace.WITH_CUSTOM_MODEL_DATA);
-                            for (var element : x) {
-                                var obj = element.getAsJsonObject();
-                                if (obj.has("predicate") && obj.getAsJsonObject("predicate").has("custom_model_data")) {
-                                    withCmd.add(obj);
-                                } else {
-                                    existing.add(obj);
-                                }
-                            }
-                        }
-                        for (var place : OverridePlace.values()) {
-                            this.getCustomModels(id, place).asList().sort(CMD_COMPARATOR);
-                        }
-                        var jsonArray = new JsonArray();
-
-                        for (var models : this.customModels.get(id)) {
-                            if (models != null) {
-                                jsonArray.addAll(models);
-                            }
-                        }
-
-                        modelObject.add("overrides", jsonArray);
-
-                        this.fileMap.put(baseModelPath, modelObject.toString().getBytes(StandardCharsets.UTF_8));
-                    } catch (Exception e) {
-                        CommonImpl.LOGGER.error("Something went wrong while saving model of " + id, e);
-                        bool = false;
-                    }
-                }
 
                 for (var entry : this.atlasDefinitions.entrySet()) {
                     var obj = new JsonObject();
@@ -486,12 +423,11 @@ public class DefaultRPBuilder implements InternalRPBuilder {
             for (var path : this.fileMap.keySet().toArray(new String[0])) {
                 var split = new ArrayList<>(List.of(path.split("/")));
                 while (split.size() > 1) {
-                    split.remove(split.size() - 1);
+                    split.removeLast();
                     this.fileMap.put(String.join("/", split) + "/", null);
                 }
 
             }
-
 
             var sorted = new ArrayList<>(this.fileMap.entrySet());
             sorted.sort(Map.Entry.comparingByKey());

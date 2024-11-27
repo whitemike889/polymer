@@ -34,6 +34,7 @@ dependencies {
     testmodImplementation (project(path: ':polymer-blocks', configuration: 'namedElements'))
     testmodImplementation (project(path: ':polymer-reg-sync-manipulator', configuration: 'namedElements'))
     testmodImplementation (project(path: ':polymer-networking', configuration: 'namedElements'))
+    testmodImplementation (project(path: ':polymer-resource-pack-extras', configuration: 'namedElements'))
 
     compileOnly (project(path: ':polymer-virtual-entity', configuration: 'namedElements'))
     localRuntime (project(path: ':polymer-virtual-entity', configuration: 'namedElements'))

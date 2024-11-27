@@ -85,7 +85,8 @@ dependencies {
 
     compileOnly (project(path: ':polymer-resource-pack', configuration: 'namedElements'))
     localRuntime (project(path: ':polymer-resource-pack', configuration: 'namedElements'))
-
+    compileOnly (project(path: ':polymer-resource-pack-extras', configuration: 'namedElements'))
+    localRuntime (project(path: ':polymer-resource-pack-extras', configuration: 'namedElements'))
     compileOnly (project(path: ':polymer-virtual-entity', configuration: 'namedElements'))
     localRuntime (project(path: ':polymer-virtual-entity', configuration: 'namedElements'))
 }

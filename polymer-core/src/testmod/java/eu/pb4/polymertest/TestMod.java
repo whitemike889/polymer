@@ -1,5 +1,6 @@
 package eu.pb4.polymertest;
 
+import eu.pb4.polymer.common.api.PolymerCommonUtils;
 import eu.pb4.polymer.core.api.block.BlockMapper;
 import eu.pb4.polymer.core.api.block.SimplePolymerBlock;
 import eu.pb4.polymer.core.api.entity.PolymerEntityUtils;
@@ -11,6 +12,8 @@ import eu.pb4.polymer.core.api.utils.PolymerUtils;
 import eu.pb4.polymer.core.impl.PolymerImpl;
 import eu.pb4.polymer.core.impl.client.InternalClientRegistry;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import eu.pb4.polymer.resourcepack.extras.api.ResourcePackExtras;
+import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
@@ -34,9 +37,6 @@ import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.item.consume.ApplyEffectsConsumeEffect;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.recipe.RecipeSerializer;
@@ -49,24 +49,20 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.DebugInfoSender;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.*;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradeOffers;
 import net.minecraft.village.TradedItem;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.source.BiomeAccess;
 import xyz.nucleoid.server.translations.api.LocalizationTarget;
-import xyz.nucleoid.server.translations.impl.ServerTranslations;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -257,8 +253,8 @@ public class TestMod implements ModInitializer {
     public void onInitialize() {
         //ITEM_GROUP.setIcon();
         PolymerResourcePackUtils.addModAssets("apolymertest");
-        PolymerResourcePackUtils.addBridgedModelsFolder(Identifier.of("polymertest", "testificate"));
-        PolymerResourcePackUtils.addBridgedModelsFolder(Identifier.of("blocktest", "block"));
+        ResourcePackExtras.forDefault().addBridgedModelsFolder(Identifier.of("polymertest", "testificate"));
+        ResourcePackExtras.forDefault().addBridgedModelsFolder(Identifier.of("blocktest", "block"));
         PolymerResourcePackUtils.getInstance().setPackDescription(Text.literal("TEST REPLACED DESCRIPTION").formatted(Formatting.GREEN));
         //PolymerResourcePackUtils.markAsRequired();
         //PolymerResourcePackUtils.addModAsAssetsSource("promenade");
@@ -500,6 +496,29 @@ public class TestMod implements ModInitializer {
         if (PolymerImpl.IS_CLIENT) {
             InternalClientRegistry.decodeState(-1);
         }
+
+        new Thread(() -> {
+            var vanillaJar = PolymerCommonUtils.getClientJarRoot();
+
+            var itemsBase = vanillaJar.resolve("assets/minecraft/items/");
+
+            try {
+                Files.walk(itemsBase, 1).forEach(path -> {
+                    try {
+                        var asset = ItemAsset.fromJson(Files.readString(path));
+                        //System.out.println(path + ">" + asset);
+                    } catch (Throwable e) {
+                        System.err.println("Error while parsing file: " + path);
+                        e.printStackTrace();
+                    }
+
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }).run();
     }
     
     public static <B, T extends B> T register(Registry<B> registry, Identifier id, T obj) {

@@ -1,7 +1,7 @@
 package eu.pb4.blocktest;
 
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import eu.pb4.polymer.resourcepack.extras.api.ResourcePackExtras;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -15,7 +15,7 @@ public class TestItem extends BlockItem implements PolymerItem {
     private final Identifier polymerModel;
     public TestItem(Settings settings, Block block, String modelId) {
         super(block, settings);
-        this.polymerModel = PolymerResourcePackUtils.getBridgedModelId(Identifier.of("blocktest", modelId));
+        this.polymerModel = ResourcePackExtras.bridgeModel(Identifier.of("blocktest", modelId));
 
     }
 

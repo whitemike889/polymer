@@ -91,7 +91,7 @@ public interface ResourcePackBuilder {
 
     boolean addAssetsSource(String modId);
 
-    void addWriteConverter(BiFunction<String, byte[], byte  @Nullable []> converter);
+    void addWriteConverter(BiFunction<String, byte[], byte @Nullable []> converter);
 
     void addPreFinishTask(Consumer<ResourcePackBuilder> consumer);
 

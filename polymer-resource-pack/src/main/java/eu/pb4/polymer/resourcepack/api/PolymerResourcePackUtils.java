@@ -8,7 +8,6 @@ import eu.pb4.polymer.resourcepack.impl.compat.polymc.PolyMcHelpers;
 import eu.pb4.polymer.resourcepack.impl.generation.DefaultRPBuilder;
 import eu.pb4.polymer.resourcepack.api.metadata.PackMcMeta;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.Item;
 import net.minecraft.server.network.ServerCommonNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -18,7 +17,6 @@ import xyz.nucleoid.packettweaker.PacketContext;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -29,7 +27,7 @@ public final class PolymerResourcePackUtils {
     private PolymerResourcePackUtils() {
     }
 
-    private static final ResourcePackCreator INSTANCE = new ResourcePackCreator(PolymerResourcePackImpl.USE_OFFSET ? PolymerResourcePackImpl.OFFSET_VALUES : 1);
+    private static final ResourcePackCreator INSTANCE = new ResourcePackCreator();
 
     public static final SimpleEvent<Consumer<ResourcePackBuilder>> RESOURCE_PACK_CREATION_EVENT = INSTANCE.creationEvent;
     public static final SimpleEvent<Consumer<ResourcePackBuilder>> RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT = INSTANCE.afterInitialCreationEvent;
@@ -74,27 +72,6 @@ public final class PolymerResourcePackUtils {
      */
     public static boolean isRequired() {
         return REQUIRED;
-    }
-
-
-    public static boolean addBridgedModelsFolder(Identifier modelFolderId) {
-        return INSTANCE.addBridgedModelsFolder(modelFolderId);
-    }
-
-    public static boolean addBridgedModelsFolder(Identifier... modelFolderId) {
-        return INSTANCE.addBridgedModelsFolder(modelFolderId);
-    }
-
-    public static Identifier getBridgedModelId(Identifier model) {
-        if (model.getPath().startsWith("item/")) {
-            return model.withPath(model.getPath().substring("item/".length()));
-        }
-
-        return model.withPrefixedPath("-/");
-    }
-
-    public static Identifier bridgeModel(Identifier model) {
-        return getBridgedModelId(model);
     }
 
     /**

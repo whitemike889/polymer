@@ -33,6 +33,8 @@ dependencies {
     implementation(project(path: ':polymer-core', configuration: 'namedElements'))
     implementation(project(path: ':polymer-common', configuration: 'namedElements'))
     implementation(project(path: ':polymer-resource-pack', configuration: 'namedElements'))
+    compileOnly project(path: ":polymer-resource-pack-extras", configuration: "namedElements")
+
     modCompileOnly "me.lucko:fabric-permissions-api:0.1-SNAPSHOT"
 
     //modLocalRuntime "fr.catcore:server-translations-api:1.4.9+1.18.2-rc1"

@@ -48,15 +48,15 @@ public final class AssetPaths {
         return texture(id.getNamespace(), "item/" + id.getPath() + ".png.mcmeta");
     }
 
-    public static String armorTexture(Identifier id, int layer) {
-        return texture(id.getNamespace(), "models/armor/" + id.getPath() + "_layer_" + layer + ".png");
+    public static String itemAsset(Identifier identifier) {
+        return "assets/" + identifier.getNamespace() + "/items/" + identifier.getPath() + ".json";
     }
 
-    public static String armorOverlayTexture(Identifier id, int layer) {
-        return texture(id.getNamespace(), "models/armor/" + id.getPath() + "_layer_" + layer + "_overlay.png");
-    }
+    //public static String armorTexture(Identifier id, int layer) {
+    //    return texture(id.getNamespace(), "models/armor/" + id.getPath() + "_layer_" + layer + ".png");
+    //}
 
-    public static String armorTexturePolymerMetadata(Identifier id, int layer) {
-        return texture(id.getNamespace(), "models/armor/" + id.getPath() + "_layer_" + layer + ".polymer.json");
-    }
+    //public static String armorOverlayTexture(Identifier id, int layer) {
+    //    return texture(id.getNamespace(), "models/armor/" + id.getPath() + "_layer_" + layer + "_overlay.png");
+    //}
 }
