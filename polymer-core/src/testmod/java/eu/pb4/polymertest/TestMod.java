@@ -59,6 +59,7 @@ import net.minecraft.village.TradedItem;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.server.translations.api.LocalizationTarget;
 
 import java.io.IOException;
@@ -500,19 +501,26 @@ public class TestMod implements ModInitializer {
         new Thread(() -> {
             var vanillaJar = PolymerCommonUtils.getClientJarRoot();
 
-            var itemsBase = vanillaJar.resolve("assets/minecraft/items/");
+            var itemsBase = vanillaJar.resolve("/assets/minecraft/items/");
 
             try {
+                var value = new MutableInt();
+                var count = new MutableInt();
                 Files.walk(itemsBase, 1).forEach(path -> {
+                    if (path.equals(itemsBase)) {
+                        return;
+                    }
+                    count.increment();
                     try {
                         var asset = ItemAsset.fromJson(Files.readString(path));
                         //System.out.println(path + ">" + asset);
+                        value.increment();
                     } catch (Throwable e) {
                         System.err.println("Error while parsing file: " + path);
                         e.printStackTrace();
                     }
-
                 });
+                System.out.println("Parsed " + value + " out of " + count + " models!");
             } catch (IOException e) {
                 e.printStackTrace();
             }
