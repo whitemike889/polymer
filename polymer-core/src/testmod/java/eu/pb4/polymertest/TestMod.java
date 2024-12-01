@@ -14,6 +14,7 @@ import eu.pb4.polymer.core.impl.client.InternalClientRegistry;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.extras.api.ResourcePackExtras;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
+import eu.pb4.polymer.resourcepack.extras.api.format.model.Model;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
@@ -500,19 +501,41 @@ public class TestMod implements ModInitializer {
 
         new Thread(() -> {
             var vanillaJar = PolymerCommonUtils.getClientJarRoot();
-
             var itemsBase = vanillaJar.resolve("/assets/minecraft/items/");
+            var modelsBase = vanillaJar.resolve("/assets/minecraft/models/");
 
             try {
                 var value = new MutableInt();
                 var count = new MutableInt();
-                Files.walk(itemsBase, 1).forEach(path -> {
-                    if (path.equals(itemsBase)) {
+                Files.walk(itemsBase).forEach(path -> {
+                    if (!path.toString().endsWith(".json")) {
                         return;
                     }
                     count.increment();
                     try {
                         var asset = ItemAsset.fromJson(Files.readString(path));
+                        //System.out.println(path + ">" + asset);
+                        value.increment();
+                    } catch (Throwable e) {
+                        System.err.println("Error while parsing file: " + path);
+                        e.printStackTrace();
+                    }
+                });
+                System.out.println("Parsed " + value + " out of " + count + " item assets!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                var value = new MutableInt();
+                var count = new MutableInt();
+                Files.walk(modelsBase).forEach(path -> {
+                    if (!path.toString().endsWith(".json")) {
+                        return;
+                    }
+                    count.increment();
+                    try {
+                        var asset = Model.fromJson(Files.readString(path));
                         //System.out.println(path + ">" + asset);
                         value.increment();
                     } catch (Throwable e) {
