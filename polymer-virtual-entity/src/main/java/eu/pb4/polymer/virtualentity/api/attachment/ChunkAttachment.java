@@ -29,8 +29,8 @@ public class ChunkAttachment implements HolderAttachment {
         this.chunk = chunk;
         this.pos = position;
         this.holder = holder;
-        this.attach();
         this.autoTick = autoTick;
+        this.attach();
     }
 
     protected void attach() {
