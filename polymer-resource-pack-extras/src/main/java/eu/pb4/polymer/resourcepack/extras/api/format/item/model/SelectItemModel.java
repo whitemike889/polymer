@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.property.select.SelectProperty;
 import net.minecraft.util.dynamic.Codecs;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,39 @@ public record SelectItemModel<T extends SelectProperty<V>, V>(Switch<T, V> switc
                             ItemModel.CODEC.fieldOf("model").forGetter(Case::model)
                     ).apply(instance, Case::new)
             );
+        }
+    }
+
+    public static <T extends SelectProperty<V>, V> Builder<T, V> builder(T property) {
+        return new Builder<>(property);
+    }
+
+    public static class Builder<T extends SelectProperty<V>, V> {
+        private final T property;
+        private final List<Case<V>> cases = new ArrayList<>();
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        private Optional<ItemModel> fallbackModel = Optional.empty();
+        private Builder(T property) {
+            this.property = property;
+        }
+
+        public Builder<T, V> withCase(V value, ItemModel model) {
+            this.cases.add(new Case<>(List.of(value), model));
+            return this;
+        }
+
+        public Builder<T, V> withCase(List<V> value, ItemModel model) {
+            this.cases.add(new Case<>(value, model));
+            return this;
+        }
+
+        public Builder<T, V> fallback(ItemModel model) {
+            this.fallbackModel = Optional.ofNullable(model);
+            return this;
+        }
+
+        public SelectItemModel<T, V> build() {
+            return new SelectItemModel<>(new Switch<>(this.property, new ArrayList<>(this.cases)), this.fallbackModel);
         }
     }
 }

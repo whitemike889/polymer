@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "eu.pb4.polymer.resourcepack.mixin.PolymerResourcePackMixinConfigPlugin",
   "mixins": [
+    "accessors.BlockEntryAccessor",
     "accessors.PackOverlaysMetadataAccessor",
     "accessors.ResourceFilterAccessor"
   ],

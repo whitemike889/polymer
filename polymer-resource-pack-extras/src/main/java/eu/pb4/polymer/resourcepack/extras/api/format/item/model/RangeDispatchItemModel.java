@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.property.numeric.NumericProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,5 +27,40 @@ public record RangeDispatchItemModel(NumericProperty property, float scale, List
                 Codec.FLOAT.fieldOf("threshold").forGetter(Entry::threshold),
                 ItemModel.CODEC.fieldOf("model").forGetter(Entry::model)
         ).apply(instance, Entry::new));
+    }
+
+    public static Builder builder(NumericProperty property) {
+        return new Builder(property);
+    }
+
+    public static class Builder {
+        private final NumericProperty property;
+        private final List<Entry> entries = new ArrayList<>();
+        private float scale = 1;
+
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        private Optional<ItemModel> fallbackModel = Optional.empty();
+        private Builder(NumericProperty property) {
+            this.property = property;
+        }
+
+        public Builder scale(float scale) {
+            this.scale = scale;
+            return this;
+        }
+
+        public Builder entry(float threshold, ItemModel model) {
+            this.entries.add(new Entry(threshold, model));
+            return this;
+        }
+
+        public Builder fallback(ItemModel model) {
+            this.fallbackModel = Optional.ofNullable(model);
+            return this;
+        }
+
+        public RangeDispatchItemModel build() {
+            return new RangeDispatchItemModel(this.property, this.scale, new ArrayList<>(this.entries), this.fallbackModel);
+        }
     }
 }

@@ -13,8 +13,9 @@ import eu.pb4.polymer.core.impl.PolymerImpl;
 import eu.pb4.polymer.core.impl.client.InternalClientRegistry;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.extras.api.ResourcePackExtras;
+import eu.pb4.polymer.resourcepack.extras.api.format.atlas.AtlasAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
-import eu.pb4.polymer.resourcepack.extras.api.format.model.Model;
+import eu.pb4.polymer.resourcepack.extras.api.format.model.ModelAsset;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
@@ -503,6 +504,7 @@ public class TestMod implements ModInitializer {
             var vanillaJar = PolymerCommonUtils.getClientJarRoot();
             var itemsBase = vanillaJar.resolve("/assets/minecraft/items/");
             var modelsBase = vanillaJar.resolve("/assets/minecraft/models/");
+            var atlasBase = vanillaJar.resolve("/assets/minecraft/atlases/");
 
             try {
                 var value = new MutableInt();
@@ -535,7 +537,7 @@ public class TestMod implements ModInitializer {
                     }
                     count.increment();
                     try {
-                        var asset = Model.fromJson(Files.readString(path));
+                        var asset = ModelAsset.fromJson(Files.readString(path));
                         //System.out.println(path + ">" + asset);
                         value.increment();
                     } catch (Throwable e) {
@@ -544,6 +546,28 @@ public class TestMod implements ModInitializer {
                     }
                 });
                 System.out.println("Parsed " + value + " out of " + count + " models!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                var value = new MutableInt();
+                var count = new MutableInt();
+                Files.walk(atlasBase).forEach(path -> {
+                    if (!path.toString().endsWith(".json")) {
+                        return;
+                    }
+                    count.increment();
+                    try {
+                        var asset = AtlasAsset.fromJson(Files.readString(path));
+                        //System.out.println(path + ">" + asset);
+                        value.increment();
+                    } catch (Throwable e) {
+                        System.err.println("Error while parsing file: " + path);
+                        e.printStackTrace();
+                    }
+                });
+                System.out.println("Parsed " + value + " out of " + count + " atlases!");
             } catch (IOException e) {
                 e.printStackTrace();
             }

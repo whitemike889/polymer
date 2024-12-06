@@ -61,7 +61,7 @@ public final class ResourcePackExtras {
     /**
      * Adds a bridge, allowing you to access any model from selected folder as `namespace:-/modelpath`.
      *
-     * @param modelFolderId Model folder to bridge. For example "mod:block" will bridge all models from "assets/mod/models/block"
+     * @param modelFolderId ModelAsset folder to bridge. For example "mod:block" will bridge all models from "assets/mod/models/block"
      * @return Success of addition.
      */
     public boolean addBridgedModelsFolder(Identifier modelFolderId) {

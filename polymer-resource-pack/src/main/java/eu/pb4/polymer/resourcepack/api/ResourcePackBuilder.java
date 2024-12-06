@@ -15,6 +15,12 @@ import java.util.function.Consumer;
 @ApiStatus.NonExtendable
 public interface ResourcePackBuilder {
     boolean addData(String path, byte[] data);
+    default boolean addData(String path, WritableAsset data) {
+        return this.addData(path, data.toBytes());
+    }
+    default boolean addStringData(String path, String data) {
+        return addData(path, data.getBytes(StandardCharsets.UTF_8));
+    }
 
     boolean copyAssets(String modId);
 
@@ -86,6 +92,16 @@ public interface ResourcePackBuilder {
     byte @Nullable [] getData(String path);
 
     byte @Nullable [] getDataOrSource(String path);
+
+    default @Nullable String getStringData(String path) {
+        var data = getData(path);
+        return data != null ? new String(data, StandardCharsets.UTF_8) : null;
+    }
+
+    default @Nullable String getStringDataOrSource(String path) {
+        var data = getDataOrSource(path);
+        return data != null ? new String(data, StandardCharsets.UTF_8) : null;
+    }
 
     void forEachFile(BiConsumer<String, byte[]> consumer);
 

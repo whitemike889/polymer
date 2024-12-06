@@ -5,9 +5,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import eu.pb4.polymer.resourcepack.api.WritableAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.model.ItemModel;
 
-public record ItemAsset(ItemModel model, Properties properties) {
+public record ItemAsset(ItemModel model, Properties properties) implements WritableAsset.Json {
     public static final Codec<ItemAsset> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ItemModel.CODEC.fieldOf("model").forGetter(ItemAsset::model),
             Properties.CODEC.forGetter(ItemAsset::properties)

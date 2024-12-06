@@ -2,10 +2,13 @@ package eu.pb4.polymer.resourcepack.extras.api.format.model;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.floats.FloatList;
 import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -79,6 +82,94 @@ public record ModelElement(Vec3d from, Vec3d to, Map<Direction, Face> faces, Opt
 
         public Face(String texture) {
             this(List.of(), texture, Optional.empty(), 0, -1);
+        }
+    }
+
+    public static Builder builder(Vec3d from, Vec3d to) {
+        return new Builder(from, to);
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static class Builder {
+        private final Vec3d from;
+        private final Vec3d to;
+        private final Map<Direction, Face> faces = new EnumMap<>(Direction.class);
+        private Optional<Rotation> rotation = Optional.empty();
+        private boolean shade = true;
+        private int lightEmission = 0;
+
+        private Builder(Vec3d from, Vec3d to) {
+            this.from = from;
+            this.to = to;
+        }
+
+        public Builder rotation(Vec3d origin, Direction.Axis axis, float angle, boolean rescale) {
+            return this.rotation(new Rotation(origin, axis, angle, rescale));
+        }
+
+        public Builder rotation(Vec3d origin, Direction.Axis axis, float angle) {
+            return this.rotation(new Rotation(origin, axis, angle));
+        }
+
+        public Builder rotation(Direction.Axis axis, float angle) {
+            return this.rotation(new Rotation(axis, angle));
+        }
+
+        public Builder face(Direction direction, Face face) {
+            this.faces.put(direction, face);
+            return this;
+        }
+
+        public Builder face(Direction direction, float u1, float v1, float u2, float v2, String texture, Direction cullFace, int rotation, int tint) {
+            return this.face(direction, new Face(FloatList.of(u1, v1, u2, v2), texture, Optional.ofNullable(cullFace), rotation, tint));
+        }
+
+        public Builder face(Direction direction, float u1, float v1, float u2, float v2, String texture, Direction cullFace, int rotation) {
+            return this.face(direction, new Face(FloatList.of(u1, v1, u2, v2), texture, Optional.ofNullable(cullFace), rotation));
+        }
+
+        public Builder face(Direction direction, float u1, float v1, float u2, float v2, String texture, Direction cullFace) {
+            return this.face(direction, new Face(FloatList.of(u1, v1, u2, v2), texture, Optional.ofNullable(cullFace)));
+        }
+
+        public Builder face(Direction direction, float u1, float v1, float u2, float v2, String texture) {
+            return this.face(direction, new Face(FloatList.of(u1, v1, u2, v2), texture));
+        }
+
+        public Builder face(Direction direction, String texture, Direction cullFace, int rotation, int tint) {
+            return this.face(direction, new Face(List.of(), texture, Optional.ofNullable(cullFace), rotation, tint));
+        }
+
+        public Builder face(Direction direction, String texture, int rotation, int tint) {
+            return this.face(direction, new Face(List.of(), texture, Optional.empty(), rotation, tint));
+        }
+
+        public Builder face(Direction direction, String texture, int rotation) {
+            return this.face(direction, new Face(List.of(), texture, Optional.empty(), rotation));
+        }
+
+        public Builder face(Direction direction, String texture) {
+            return this.face(direction, new Face(texture));
+        }
+
+        public Builder rotation(Rotation rotation) {
+            this.rotation = Optional.ofNullable(rotation);
+            return this;
+        }
+
+        public Builder shade(boolean shade) {
+            this.shade = shade;
+            return this;
+        }
+
+        public Builder lightEmission(int lightEmission) {
+            this.lightEmission = MathHelper.clamp(lightEmission, 0, 15);
+            return this;
+        }
+
+
+        public ModelElement build() {
+            return new ModelElement(from, to, new EnumMap<>(this.faces), this.rotation, this.shade, this.lightEmission);
         }
     }
 }
