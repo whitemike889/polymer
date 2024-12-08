@@ -16,6 +16,7 @@ import eu.pb4.polymer.resourcepack.extras.api.ResourcePackExtras;
 import eu.pb4.polymer.resourcepack.extras.api.format.atlas.AtlasAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.model.ModelAsset;
+import eu.pb4.polymer.resourcepack.extras.api.format.sound.SoundsAsset;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
@@ -65,6 +66,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import xyz.nucleoid.server.translations.api.LocalizationTarget;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -568,6 +570,16 @@ public class TestMod implements ModInitializer {
                     }
                 });
                 System.out.println("Parsed " + value + " out of " + count + " atlases!");
+
+
+                try {
+                    var asset = SoundsAsset.fromJson(new String(TestMod.class.getResourceAsStream("/test/sounds.json").readAllBytes(), StandardCharsets.UTF_8));
+                    System.out.println("Parsed sounds.json!");
+                    value.increment();
+                } catch (Throwable e) {
+                    System.err.println("Error while parsing file: sounds.json");
+                    e.printStackTrace();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

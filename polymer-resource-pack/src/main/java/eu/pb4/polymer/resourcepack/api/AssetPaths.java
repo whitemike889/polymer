@@ -52,6 +52,11 @@ public final class AssetPaths {
         return "assets/" + identifier.getNamespace() + "/items/" + identifier.getPath() + ".json";
     }
 
+    public static String soundsAsset(String namespace) {
+        return "assets/" + namespace + "/sounds.json";
+    }
+
+
     //public static String armorTexture(Identifier id, int layer) {
     //    return texture(id.getNamespace(), "models/armor/" + id.getPath() + "_layer_" + layer + ".png");
     //}
