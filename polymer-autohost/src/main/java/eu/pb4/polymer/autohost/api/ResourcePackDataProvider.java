@@ -32,10 +32,12 @@ public interface ResourcePackDataProvider {
     Collection<MinecraftServer.ServerResourcePackProperties> getProperties(ClientConnection connection);
 
     static MinecraftServer.ServerResourcePackProperties createProperties(@Nullable UUID uuid, String address, @Nullable String hash) {
-        return new MinecraftServer.ServerResourcePackProperties(uuid != null
-                ? uuid : UUID.nameUUIDFromBytes(address.getBytes(StandardCharsets.UTF_8)),
+        return new MinecraftServer.ServerResourcePackProperties(
+                uuid != null ? uuid : UUID.nameUUIDFromBytes(address.getBytes(StandardCharsets.UTF_8)),
                 address,
                 hash != null ? hash : "",
-                AutoHost.config.require || PolymerResourcePackUtils.isRequired(), AutoHost.message);
+                AutoHost.config.require || (AutoHost.config.modOverride && PolymerResourcePackUtils.isRequired()),
+                AutoHost.message
+        );
     }
 }
