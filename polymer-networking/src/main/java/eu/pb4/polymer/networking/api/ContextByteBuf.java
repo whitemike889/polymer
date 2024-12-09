@@ -27,7 +27,7 @@ public class ContextByteBuf extends RegistryByteBuf {
 
         if (buf instanceof RegistryByteBuf reg) {
             registryManager = reg.getRegistryManager();
-        } else if (context.getPacketListener() instanceof NetworkHandlerExtension ext) {
+        } else if (context.getBackingPacketListener() instanceof NetworkHandlerExtension ext) {
             registryManager = ext.polymer$getDynamicRegistryManager();
         }
         if (registryManager == null) {

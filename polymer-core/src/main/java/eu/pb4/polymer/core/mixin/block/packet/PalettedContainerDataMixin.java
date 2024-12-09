@@ -29,7 +29,7 @@ public abstract class PalettedContainerDataMixin<T> {
         var palette = this.palette();
         if (palette instanceof IdListPalette<T> && palette.get(0) instanceof BlockState) {
             var player = PacketContext.get();
-            if (player.getPacketListener() == null) {
+            if (player.getClientConnection() == null) {
                 return storage;
             }
             int bits;

@@ -36,7 +36,7 @@ public class ItemStackMixin {
         }, content -> { // Encode
             if (PolymerCommonUtils.isServerNetworkingThreadWithContext()) {
                 var ctx = PacketContext.get();
-                if (ctx.getPacketListener() == null) {
+                if (ctx.getBackingPacketListener() == null) {
                     return content;
                 }
                 return PolymerItemUtils.getPolymerItemStack(content, ctx);
