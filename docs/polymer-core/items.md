@@ -20,11 +20,11 @@ For most basic uses, there are default implementation of `PolymerItem`:
 * `PolymerBlockItem` - Same as vanilla `BlockItem`,
 * `PolymerHeadBlockItem` - Similar to `PolymerBlockItem`, but for Blocks implementing `PolymerHeadBlock` interface.
 
-### Selecting visual item type.
-To select visual item type, you need to implement this method
-* `Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayerEntity player)`
+### Selecting base item type.
+To select base item type, you need to implement this method
+* `Item getPolymerItem(ItemStack itemStack, PacketContext context)`
 
-They can't return nulls. They can also point to other PolymerItem instance, but keep
+It can't return nulls. They can also point to other PolymerItem instance, but keep
 in mind to make validation if it's configurable by user!
 
 Example use:
@@ -32,51 +32,26 @@ Example use:
 Changing client-side item to diamond
 ```
 @Override
-public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
+public Item getPolymerItem(ItemStack itemStack, PacketContext context) {
     return itemStack.getCount() > 32 ? Items.DIAMOND_BLOCK : Items.DIAMOND;
 }
 ```
 
+### Changing item model
+By default, Polymer will use whatever the `item_model` component is set for the item, which is  equal to the value 
+you provided in Item.Settings, as long as ItemStack doesn't override it.
+
+For better control over it, you can override `Identifier getPolymerItemModel(ItemStack itemStack, PacketContext context)`
+method.
+
 ### Manipulation of client side ItemStack
 Sometimes it's useful to manipulate entire ItemStack, as it allows achieving better effects.
-To do so, you need to override the `ItemStack getPolymerItemStack(ItemStack itemStack, TooltipContext context, @Nullable ServerPlayerEntity player)`
-method. However, keep in mind that making nbt incorrect might create some issues (for example 
-breaking items in creative mode)!
+To do so, you need to override the `void modifyBasePolymerItemStack(ItemStack out, ItemStack stack, PacketContext context)`
+method. You can only modify the `out` item stack, as it's item that gets sent to the client.
+The `stack` item is what server sends by default and should never be modified.
 
-Ideally you should modify output of `PolymerItem.super.getPolymerItemStack(itemStack, context, player)`,
-`PolymerItemUtils.createItemStack(itemStack, player)`
-or `PolymerItemUtils.createMinimalItemStack(itemStack, player)`, as they contain all required NBT.
-
-Example use:
-
-Adding enchanting glint to item.
-```
-@Override
-public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipContext context, ServerPlayerEntity player) {
-    ItemStack out = PolymerItemUtils.createItemStack(itemStack, context, player);
-    out.addEnchantment(Enchantments.LURE, 0);
-    return out;
-}
-```
-
-### Support of models/CustomModelData
-You can change custom model data of virtual model by simple 
-overriding `int getPolymerCustomModelData(ItemStack itemStack, @Nullable ServerPlayerEntity player)`.
-You can return -1 to disable it, or any number above it to set value of it.
-
-Ideally you should return value created with [polymer's resource pack utils](/resource-packs/basics), 
-but nothing blocks you from using any other ones.
-
-Example usage:
-
-Changing client-side item CustomModelData to previously stored value.
-```
-@Override
-public int getPolymerCustomModelData(ItemStack itemStack, @Nullable ServerPlayerEntity player) {
-    // Instance of PolymerModelData, see info above
-    return this.cmd.value();
-}
-```
+If you need more control, you can also override `ItemStack getPolymerItemStack(ItemStack itemStack, TooltipType type, PacketContext context)`,
+however doing it incorrectly will result in items converting to vanilla ones in creative and desyncing in inventory.
 
 ## Item Groups support
 You can create server side Item Groups, which will be later synced with Polymer-compatible clients.
@@ -113,14 +88,14 @@ can cause issues (mostly around creative mode, but also in case you modify origi
 You change the client side item by either directly modifying client ItemStack 
 or creating new one and returning it. Ideally you should also keep previous nbt, 
 just so it can work nicely, You can register this event by using
-`PolymerItemUtils.ITEM_MODIFICATION_EVENT.register(((ItemStack original, ItemStack client, ServerPlayerEntity player) -> ItemStack)` lambda.
+`PolymerItemUtils.ITEM_MODIFICATION_EVENT.register(((ItemStack original, ItemStack client, PacketContext context) -> ItemStack)` lambda.
 
 Example use:
 
 Hiding enchantment glint for items with `HideEnchantments: 1b` nbt tag
 ```
 PolymerItemUtils.ITEM_MODIFICATION_EVENT.register(
-    (original, client, player) -> {
+    (original, client, context) -> {
          if (original.hasNbt() && original.getNbt().getBoolean("HideEnchantments")) {
              client.getNbt().remove("Enchantments");
 
@@ -133,7 +108,7 @@ PolymerItemUtils.ITEM_MODIFICATION_EVENT.register(
 Replacing look/name of ItemStack with "Test" NBT tag
 ```
 PolymerItemUtils.ITEM_MODIFICATION_EVENT.register(
-    (original, client, player) -> {
+    (original, client, context) -> {
          if (original.hasNbt() && original.getNbt().contains("Test", NbtElement.STRING_TYPE)) {
              ItemStack out = new ItemStack(Items.DIAMOND_SWORD, client.getCount());
              out.setNbt(client.getNbt());
@@ -160,7 +135,3 @@ PolymerBlockUtils.SERVER_SIDE_MINING_CHECK.register(
     }
 );
 ```
-
-## Enchantments
-The only thing to make your enchantment fully server side is implementation of `PolymerSyncedObject` or `PolymerEnchantment` interface.
-You also might want to manipulate some things from Polymer Block/Item events.

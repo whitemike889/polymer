@@ -19,20 +19,15 @@ For most basic uses, there are default implementation of `PolymerBlock`:
 * `SimplePolymerBlock` - Same as vanilla `Block`.
 
 ### Selecting base polymer block type.
-To change base block, you need to override `Block getPolymerBlock(BlockState state)` method.
-
-You can also override `Block getPolymerBlock(ServerPlayerEntity player, BlockState state)` to replace blocks per player,
-however keep in mind they should ideally have same collisions.
+To change base block, you need to override `Block getPolymerBlock(BlockState state, PacketContext context)` method.
 
 Both of these methods can't return null. They can also point to other PolymerBlock instances, but keep
 in mind to make validation if it's configurable by user!
 
 Example use:
-
-Making block look like a diamond
 ```
 @Override
-public Block getPolymerBlock(BlockState state) {
+public Block getPolymerBlock(BlockState state, PacketContext context) {
     return Blocks.BARRIER;
 }
 
@@ -42,10 +37,8 @@ public Block getPolymerBlock(ServerPlayerEntity player, BlockState state) {
 ```
 
 ### Changing client-side and collision BlockStates
-If you want to change what BlockState will be used for server side collision 
-and client side you need to override `BlockState getPolymerBlockState(BlockState state)` method.
-You can also override `BlockState getPolymerBlockState(BlockState state, ServerPlayerEntity player)` for player context,
-similar to `getPolymerBlock`.
+To change the blockstate visible on client and used for server side collisions, you need to override 
+`BlockState getPolymerBlockState(BlockState state, PacketContext context)` method.
 You can return other BlockState of PolymerBlock, but keep in mind you can only nest them
 up to 32!
 
@@ -54,7 +47,7 @@ Example use:
 Changing BlockState to furnace with the same facing, but inverted "lit" BlockState property
 ```
 @Override
-public BlockState getPolymerBlockState(BlockState state) {
+public BlockState getPolymerBlockState(BlockState state, PacketContext context) {
     return Blocks.FURNACE.getDefaultState()
             .with(AbstractFurnaceBlock.FACING, state.get(AbstractFurnaceBlock.FACING))
             .with(AbstractFurnaceBlock.LIT, !state.get(AbstractFurnaceBlock.LIT));
@@ -63,7 +56,7 @@ public BlockState getPolymerBlockState(BlockState state) {
 
 ### Sending additional data (signs/heads or even custom)
 In case if you want to send additional (to more customize look on client for signs/heads 
-or additional data for companion mod), you need to override `onPolymerBlockSend(BlockState blockState, BlockPos.Mutable pos, ServerPlayerEntity player)`.
+or additional data for companion mod), you need to override `onPolymerBlockSend(BlockState blockState, BlockPos.Mutable pos, PacketContext.NotNullWithPlayer context)`.
 Technically you can do anything there, but ideally it should be only used for packets.
 
 Example use:
@@ -71,7 +64,7 @@ Example use:
 Sending data required to render player head with skin
 ```
 @Override
-public void onPolymerBlockSend(BlockState blockState, BlockPos.Mutable pos, ServerPlayerEntity player) { 
+public void onPolymerBlockSend(BlockState blockState, BlockPos.Mutable pos, PacketContext.NotNullWithPlayer context) { 
     player.networkHandler.sendPacket(this.getPolymerHeadPacket(blockState, pos.toImmutable()));
 }
 ```
@@ -79,11 +72,11 @@ public void onPolymerBlockSend(BlockState blockState, BlockPos.Mutable pos, Serv
 ### Using PolymerHeadBlock
 `PolymerHeadBlock` is an interface extending PolymerBlock with methods prepared for 
 usage of player heads as a block. To modify texture, you just need to override 
-`String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity entity)` which should return texture value.
+`String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext.NotNullWithPlayer context)` which should return texture value.
 
 To generate it you can use websites like https://mineskin.org/.
 
-Additionally, you can override `BlockState getPolymerBlockState(BlockState state)` 
+Additionally, you can override `BlockState getPolymerBlockState(BlockState state, PacketContext context)` 
 to change rotation of Player Head Block.
 
 Example use:
@@ -91,7 +84,7 @@ Example use:
 Setting skin value for PolymerHeadBlock
 ```
 @Override
-public String getPolymerSkinValue(BlockState state, BlockPos pos, ServerPlayerEntity entity) {
+public String getPolymerSkinValue(BlockState state, BlockPos pos, PacketContext.NotNullWithPlayer context) {
     return "ewogICJ0aW1lc3RhbXAiIDogMTYxNzk3NjcxOTAzNSwKICAicHJvZmlsZUlkIiA6ICJlZDUzZGQ4MTRmOWQ0YTNjYjRlYjY1MWRjYmE3N2U2NiIsCiAgInByb2ZpbGVOYW1lIiA6ICI0MTQxNDE0MWgiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTczNTE0YTIzMjQ1ZjE1ZGJhZDVmYjRlNjIyMTYzMDIwODY0Y2NlNGMxNWQ1NmRlM2FkYjkwZmE1YTcxMzdmZCIKICAgIH0KICB9Cn0";
 }
 ```
@@ -104,7 +97,7 @@ The only thing you need to do to remove BlockEntity from being sent to client is
 
 ## Getting Polymer Blocks client representation
 If you want to get client-friendly representation of block, you need to call
-`PolymerBlockUtils.getBlockStateSafely(PolymerBlock block, BlockState blockState)`
+`PolymerBlockUtils.getBlockStateSafely(PolymerBlock block, BlockState blockState, PacketContext context)`
 method. It should return block safe to use (or air in case of failure).
 
 ## Limitations

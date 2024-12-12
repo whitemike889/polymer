@@ -14,7 +14,7 @@ You also need to register your entity type as virtual,
 by using `PolymerEntityUtils.registerType(EntityType... types)`.
 
 ### Changing client side entity.
-To select visual entity type, you just need to override `EntityType<?> getPolymerEntityType(ServerPlayerEntity player)`
+To select visual entity type, you just need to override `EntityType<?> getPolymerEntityType(PacketContext context)`
 
 This method can't return null or another EntityType that points to other virtual entity, as it won't work.
 
@@ -23,7 +23,7 @@ Example use:
 Displaying entity as zombie
 ```
 @Override
-public EntityType<?> getPolymerEntityType(ServerPlayerEntity player) {
+public EntityType<?> getPolymerEntityType(PacketContext context) {
     return EntityType.ZOMBIE;
 }
 ```

@@ -17,7 +17,7 @@ You can do that by registering packets for which you should check [Polymer Netwo
 
 After that you can just validate if player supports it with this check it like this
 ```
-SomeObject getPolymerX(ServerPlayerEntity player) {
+SomeObject getPolymerX(PacketContext context) {
     if (PolymerServerNetworking.getSupportedVersion(player.networkHandler, PACKET_ID) > 0) {
         // Client state for modded
         return this;
