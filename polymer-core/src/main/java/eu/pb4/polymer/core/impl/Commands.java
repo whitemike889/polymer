@@ -53,10 +53,7 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.stat.StatType;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.RawFilteredPair;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -215,15 +212,21 @@ public class Commands {
             builder.append("]");
         }
 
-        context.getSource().sendFeedback(() -> Text.literal(builder.toString()), false);
+        context.getSource().sendFeedback(() -> Text.literal(builder.toString())
+                .setStyle(Style.EMPTY
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("chat.copy.click")))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, builder.toString()))), false);
 
         return 0;
     }
 
     private static int targetItem(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         var itemStack = context.getSource().getPlayerOrThrow().getMainHandStack();
-        context.getSource().sendFeedback(() -> Text.of(Registries.ITEM.getId(itemStack.getItem())), false);
-        return 0;
+        var id = Registries.ITEM.getId(itemStack.getItem());
+        context.getSource().sendFeedback(() -> Text.literal(id.toString())
+                .setStyle(Style.EMPTY
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("chat.copy.click")))
+                        .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, id.toString()))), false);        return 0;
     }
 
     private static int dumpRegistries(CommandContext<ServerCommandSource> context) {
